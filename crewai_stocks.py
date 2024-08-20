@@ -1,10 +1,9 @@
 import datetime
 from dotenv import load_dotenv
-
+import streamlit as st
 import yfinance as yf
 
 from crewai import Agent, Task, Crew, Process
-
 from langchain.tools import Tool
 from langchain_openai import ChatOpenAI
 from langchain_community.tools import DuckDuckGoSearchResults
@@ -129,4 +128,21 @@ crew = Crew(
     max_iter = 15
 )
 
-results = crew.kickoff(inputs={'ticket': 'AAPL'})
+# Streamlit app
+with st.sidebar:
+    st.header('Enter the Stock to Research:')
+
+    with st.form(key='research-form'):
+        topic = st.text_input('Type the stock ticket')
+        submit_button = st.form_submit_button(label = 'Run research')
+    
+    st.write('Analysis made with stock prices from the last 12 months.')
+
+if submit_button:
+    if not topic:
+        st.error('Please fill the stock ticket.')
+    else:
+        results = crew.kickoff(inputs={'ticket': topic.upper()})
+
+        st.subheader('Results from Stock Research:')
+        st.write(results['final_output'])
