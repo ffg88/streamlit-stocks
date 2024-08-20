@@ -1,5 +1,5 @@
 import datetime
-from dotenv import load_dotenv
+import os
 import streamlit as st
 import yfinance as yf
 
@@ -10,7 +10,7 @@ from langchain_community.tools import DuckDuckGoSearchResults
 
 
 # Loading API KEY from .env and defining the LLM model
-load_dotenv()
+os.environ['OPENAI_API_KEY'] = st.secrets['OPENAI_API_KEY']
 llm = ChatOpenAI(model='gpt-3.5-turbo')
 
 # Setting current date
